@@ -11,13 +11,6 @@
 - **[I JUST ADDED A NEW GIT SUBMODULE THAT USES GIT SUBMODULES ITSELF. WHY ARE THEY MISSING AND HOW DO I FIX THIS?](#i-just-added-a-new-git-submodule-that-uses-git-submodules-itself-why-are-they-missing-and-how-do-i-fix-this)**
 - **[SOURCE CODE FILE TEMPLATE (PRIVATE)](#source-code-file-template-private)**
 - **[WHAT ARE pch.h AND pch.cpp / WHAT ARE PRECOMPILED HEADERS (PCH)?](#what-are-pchh-and-pchcpp--what-are-precompiled-headers-pch)**
-- **[WHAT IS .appveyor.yml?](#what-is-appveyoryml)**
-- **[WHAT IS .editorconfig?](#what-is-editorconfig)**
-- **[WHAT IS .gitattributes?](#what-is-gitattributes)**
-- **[WHAT IS .gitignore?](#what-is-gitignore)**
-- **[WHAT IS .gitmodules?](#what-is-gitmodules)**
-- **[WHAT IS .travis.yml?](#what-is-travisyml)**
-- **[WHAT IS CMakeLists.txt?](#what-is-cmakeliststxt)**
 
 ---
 
@@ -181,18 +174,3 @@ namespace project_name::n0 {
 - CMake automatically force-includes `pch.h` so that you don't have to write the include directive in every file, but I still recommend to explicitly do so. Being explicit ensures IntelliSense recognizes includes and allows the code to remain buildable if force-including was disabled or PCH was disabled. 
 
 **NOTE: they should only be used in private source code in src/. Otherwise (publicly), either you would be exposing many unnecessary includes or the user would be missing includes due to them not having force-include of the precompiled header.**
-
-#### WHAT IS .appveyor.yml?
-**[Read this](APPVEYOR.md)**
-#### WHAT IS .editorconfig?
-**[Read this](EDITORCONFIG.md)**
-#### WHAT IS .gitattributes?
-**[Read this](GIT_ATTRIBUTES.md)**
-#### WHAT IS .gitignore?
-**[Read this](GIT_IGNORE.md)**
-#### WHAT IS .gitmodules?
-**[Read this](GIT_MODULES.md)**
-#### WHAT IS .travis.yml?
-**[Read this](TRAVIS_CI.md)**
-#### WHAT IS CMakeLists.txt?
-**[Read this](CMAKE.md)**
