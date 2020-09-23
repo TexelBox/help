@@ -1,36 +1,17 @@
 # FREQUENTLY ASKED QUESTIONS & OTHER USEFUL TIPS/REMINDERS
-
-- **[HOW DO I ADD A NEW GIT SUBMODULE?](#how-do-i-add-a-new-git-submodule)**
 - **[HOW DO I ADD TESTS?](#how-do-i-add-tests)**
 - **[HOW DO I GET CMAKE TO RECOGNIZE AN ADDED/RENAMED/DELETED FILE?](#how-do-i-get-cmake-to-recognize-an-addedrenameddeleted-file)**
-- **[HOW DO I INITIALIZE/UPDATE ALL GIT SUBMODULES RECURSIVELY?](#how-do-i-initializeupdate-all-git-submodules-recursively)**
-- **[HOW DO I SKIP CONTINUOUS INTEGRATION ON THE NEXT COMMIT?](#how-do-i-skip-continuous-integration-on-the-next-commit)**
-- **[HOW DO I STAGE A NEW SHELL SCRIPT WITH EXECUTABLE PERMISSION?](#how-do-i-stage-a-new-shell-script-with-executable-permission)**
-- **[HOW DO I UPGRADE GIT SUBMODULES TO THEIR LATEST COMMITS?](#how-do-i-upgrade-git-submodules-to-their-latest-commits)**
 - **[HOW DO I VIEW THE ENTIRE PROJECT DIRECTORY STRUCTURE IN VISUAL STUDIO?](#how-do-i-view-the-entire-project-directory-structure-in-visual-studio)**
-- **[I JUST ADDED A NEW GIT SUBMODULE THAT USES GIT SUBMODULES ITSELF. WHY ARE THEY MISSING AND HOW DO I FIX THIS?](#i-just-added-a-new-git-submodule-that-uses-git-submodules-itself-why-are-they-missing-and-how-do-i-fix-this)**
 - **[SOURCE CODE FILE TEMPLATE (PRIVATE)](#source-code-file-template-private)**
 - **[WHAT ARE pch.h AND pch.cpp / WHAT ARE PRECOMPILED HEADERS (PCH)?](#what-are-pchh-and-pchcpp--what-are-precompiled-headers-pch)**
 
 ---
 
-#### HOW DO I ADD A NEW GIT SUBMODULE?
-1. Copy the URL of the dependency's repository.
-2. From the project root directory, execute...
-```
-git submodule add -b <branch> <url> <path>
-```
-where `<branch>` is the branch name of the dependency repository to clone from (usually `master`), `<url>` is obviously the URL copied in step 1 and `<path>` is the path to a new directory that will act as the root directory for the clone. For example...
-```
-git submodule add -b master https://github.com/onqtam/doctest deps/doctest
-```
-will clone the latest master branch commit of the doctest repository into the deps/doctest directory that gets created.
-
-**NOTE: this will populate `.gitmodules` with a new entry with hard-tab indentation. If you wish to enforce soft-tab (space) indentation, you may edit the file directly, restage, and commit/push as usual.**
-
 #### HOW DO I ADD TESTS?
 - Tests are separated into two categories: internal tests and external tests. In other testing frameworks, test code is usually written in other files external to the source code being tested. Doctest still allows this external paradigm. External test code should be placed in the `tests/` directory under the extension `.test.cpp` and should mainly focus on testing public headers inside the `include/project-name/` directory, but could also be used conventionally to test code inside `src/`.
 - Internal tests: The main power of doctest is the convenience of being able to write fast/lightweight test code inside the same file being tested. This should be prioritized over writing external tests for private source code inside `src/` and completely avoided for public code (i.e. test code should not be exposed to public users). Writing the test cases next to the implementation is useful since it allows for easier test-driven development (TDD) and serves as a form of documentation.
+
+---
 
 #### HOW DO I GET CMAKE TO RECOGNIZE AN ADDED/RENAMED/DELETED FILE?
 **NOTE: this section is very important if working in a team!**
@@ -44,61 +25,12 @@ touch CMakeLists.txt
 ```
 which triggers a CMake rebuild the next time you open up your IDE (e.g. Visual Studio will issue a message about reloading the solution) or run `make`. After the touch, you can also rebuild all configs by executing the respective build script in scripts/.
 
-#### HOW DO I INITIALIZE/UPDATE ALL GIT SUBMODULES RECURSIVELY?
-```
-git submodule update --init --recursive
-```
-
-#### HOW DO I SKIP CONTINUOUS INTEGRATION ON THE NEXT COMMIT?
-- Skip all...
-```
-git commit -m "[skip ci] message"
-```
-- Skip AppVeyor only...
-```
-git commit -m "[skip appveyor] message"
-```
-- Skip Travis CI only...
-```
-git commit -m "[skip travis] message"
-```
-
-#### HOW DO I STAGE A NEW SHELL SCRIPT WITH EXECUTABLE PERMISSION?
-- If the file is untracked, stage for the first time with...
-```
-git add --chmod=+x <path/to/script>
-```
-- If the file is already tracked, you can update the permission with...
-```
-git update-index --chmod=+x <path/to/script>
-```
-
-#### HOW DO I UPGRADE GIT SUBMODULES TO THEIR LATEST COMMITS?
-- Upgrade one...
-```
-cd deps/<submodule root>
-git checkout <submodule branch>
-git pull
-cd ../..
-git commit -am "upgraded <submodule> to latest commit"
-git push origin <branch>
-```
-- Upgrade all...
-```
-git submodule update --remote --merge
-git commit -am "upgraded all submodules to latest commits"
-git push origin <branch>
-```
-**NOTE: maintainers of template repositories should keep an eye on new releases of dependencies and upgrade frequently to stable versions.**
+---
 
 #### HOW DO I VIEW THE ENTIRE PROJECT DIRECTORY STRUCTURE IN VISUAL STUDIO?
 - By default, a CMake generated solution will be opened in 'solution/filters view'. You can click the folder/swap icon at the top of the solution explorer (`Solution Explorer -> Solutions and Folders`) to toggle into 'folder view'. The downside of this action is that the built-in CMake extension might trigger a completely separate build somewhere else on disk (e.g. a Ninja build inside C:\Users\Username\CMakeBuilds\). There might be a solution to fix this, but I simply ignore it.
 
-#### I JUST ADDED A NEW GIT SUBMODULE THAT USES GIT SUBMODULES ITSELF. WHY ARE THEY MISSING AND HOW DO I FIX THIS?
-- After adding a new submodule, it seems like recursive submodules simply exist as commit references and still require initialization/updating to be cloned properly. Fix this by running...
-```
-git submodule update --init --recursive
-```
+---
 
 #### SOURCE CODE FILE TEMPLATE (PRIVATE)
 - e.g. src/n0/temp.h
@@ -166,6 +98,8 @@ namespace project_name::n0 {
 }
 ```
 
+---
+
 #### WHAT ARE pch.h AND pch.cpp / WHAT ARE PRECOMPILED HEADERS (PCH)?
 - C++ is notorious for its slow compilation speeds. Precompiled headers are a technique for speeding up overall compilation by caching an intermediate binary file called the procompiled header that gets compiled once and then simply passed to the linker whenever the main program must recompile.
 - `pch.h` should include all headers that never (or rarely) change (e.g. system headers, dependency headers, etc.). If you include headers that frequently change, the precompiled header will have to be recompiled which is slow and defeats the purpose. If nothing changes, it will only have to be compiled once.
@@ -174,3 +108,5 @@ namespace project_name::n0 {
 - CMake automatically force-includes `pch.h` so that you don't have to write the include directive in every file, but I still recommend to explicitly do so. Being explicit ensures IntelliSense recognizes includes and allows the code to remain buildable if force-including was disabled or PCH was disabled. 
 
 **NOTE: they should only be used in private source code in src/. Otherwise (publicly), either you would be exposing many unnecessary includes or the user would be missing includes due to them not having force-include of the precompiled header.**
+
+---
