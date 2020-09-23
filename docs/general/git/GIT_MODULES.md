@@ -1,2 +1,2 @@
 - Git Submodules are a way of tracking dependencies by keeping reference to a commit hash of the external repository.
-- The `.gitmodules` file in the project root firectory stores information about the submodules.
+- The `.gitmodules` file in the project root directory stores information about the submodules.
